@@ -1,0 +1,7 @@
+name: CustomRecipes
+version: 1.0
+main: me.oriharel.customrecipes.CustomRecipes
+api-version: 1.13
+authors: [Heknon]
+description: create custom recipes
+website: https://oriharel.me

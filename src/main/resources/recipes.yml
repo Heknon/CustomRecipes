@@ -1,0 +1,43 @@
+recipes:
+  compact_cobblestone:
+    by_reference: false
+    shapeless_recipe: false
+    ingredients:
+      c:
+        material: "COBBLESTONE"
+        amount: 1
+    recipe_shape: ["ccc", "ccc", "ccc"]
+    item:
+      display_name: "&7COMPACT COBBLESTONE"
+      material: "COBBLESTONE"
+      amount: 1
+      lore: [
+        "&7Compact Cobblestone Level 1",
+        "&8This item is equivalent to x9 cobblestone"
+      ]
+
+  revert_compact_cobblestone:
+    by_reference: true
+    shapeless_recipe: true
+    ingredients:
+      s:
+        ref: "compact_cobblestone"
+    recipe_shape: ['s  ']
+    item:
+      material: "COBBLESTONE"
+      amount: 9
+  compact_cobblestone_level2:
+    by_reference: true
+    shapeless_recipe: false
+    ingredients:
+      c:
+        ref: compact_cobblestone
+    recipe_shape: ["ccc", "ccc", "ccc"]
+    item:
+      display_name: "&7COMPACT COBBLESTONE LEVEL 2"
+      material: "COBBLESTONE"
+      amount: 1
+      lore: [
+        "&7Compact Cobblestone Level 2",
+        "&8This item is equivalent to x81 cobblestone"
+      ]

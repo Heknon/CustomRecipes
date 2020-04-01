@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="CustomRecipes:jar2">
+    <output-path>$PROJECT_DIR$/../../Final Plugin Versions</output-path>
+    <root id="archive" name="CustomRecipes.jar">
+      <element id="module-output" name="CustomRecipes" />
+    </root>
+  </artifact>
+</component>
