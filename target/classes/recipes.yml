@@ -1,3 +1,5 @@
+# WHEN USING SHAPELESS RECIPES, YOU CANNOT USE `by_reference: true`
+
 recipes:
   compact_cobblestone:
     by_reference: false
