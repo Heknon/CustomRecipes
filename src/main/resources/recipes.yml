@@ -20,11 +20,11 @@ recipes:
 
   revert_compact_cobblestone:
     by_reference: true
-    shapeless_recipe: true
+    shapeless_recipe: false
     ingredients:
       s:
         ref: "compact_cobblestone"
-    recipe_shape: ['s  ']
+    recipe_shape: ['s  ', '   ', '   ']
     item:
       material: "COBBLESTONE"
       amount: 9
