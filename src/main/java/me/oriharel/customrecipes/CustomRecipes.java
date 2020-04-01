@@ -2,7 +2,6 @@ package me.oriharel.customrecipes;
 
 import me.oriharel.customrecipes.api.CustomRecipesAPI;
 import me.oriharel.customrecipes.config.FileManager;
-import me.oriharel.customrecipes.listeners.ItemCraft;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,8 +29,6 @@ public final class CustomRecipes extends JavaPlugin {
 
         fileManager = new FileManager(this);
         recipesManager = new RecipesManager(this);
-
-        Bukkit.getPluginManager().registerEvents(new ItemCraft(this), this);
 
         CustomRecipesAPI.setImplementation(this);
     }

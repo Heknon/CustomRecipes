@@ -16,7 +16,6 @@ import java.util.logging.Level;
 public class RecipesManager {
     private final CustomRecipes customRecipes;
     private List<Recipe> recipes;
-    private List<Recipe> shapelessRecipes;
 
     public RecipesManager(CustomRecipes customRecipes) {
         this.customRecipes = customRecipes;
@@ -24,7 +23,6 @@ public class RecipesManager {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         this.recipes = new ArrayList<Recipe>();
-        this.shapelessRecipes = new ArrayList<Recipe>();
         if (!configLoad.isConfigurationSection("recipes")) {
             configLoad.createSection("recipes");
             try {
@@ -58,10 +56,6 @@ public class RecipesManager {
      * @return true if success false otherwise
      */
     public boolean addRecipe(Recipe recipe) {
-        if (recipe.isShapeless()) {
-            this.recipes.add(recipe);
-            return this.shapelessRecipes.add(recipe);
-        }
         boolean success = Bukkit.addRecipe(recipe.getRecipe());
         if (success) this.recipes.add(recipe);
         return success;
@@ -81,9 +75,5 @@ public class RecipesManager {
 
     public List<Recipe> getRecipes() {
         return recipes;
-    }
-
-    public List<Recipe> getShapelessRecipes() {
-        return shapelessRecipes;
     }
 }
