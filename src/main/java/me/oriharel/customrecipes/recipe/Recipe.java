@@ -23,11 +23,19 @@ public class Recipe {
     private List<IIngredient> ingredients;
     private CustomRecipes customRecipes;
     private org.bukkit.inventory.Recipe recipe;
+    private String recipeKey;
+    private List<String> recipeShape;
+    private Set<String> ingredientKeys;
+    private boolean byReference;
     private boolean shapeless;
 
     public Recipe(CustomRecipes customRecipes, String recipeKey, List<String> recipeShape, Set<String> ingredientKeys, boolean shapeless, boolean byReference) {
         this.customRecipes = customRecipes;
         this.shapeless = shapeless;
+        this.recipeKey = recipeKey;
+        this.recipeShape = recipeShape;
+        this.ingredientKeys = ingredientKeys;
+        this.byReference = byReference;
         this.result = new RecipeResultReference(recipeKey, customRecipes);
         this.ingredients = ingredientKeys.stream().map(ingredientKey -> byReference ? new ReferencedResultIngredient(getReferencedRecipeKey(recipeKey, ingredientKey), ingredientKey, customRecipes) :
                 new Ingredient(recipeKey, ingredientKey, customRecipes)).collect(Collectors.toList()
@@ -60,6 +68,22 @@ public class Recipe {
             }
             this.recipe = recipe;
         }
+    }
+
+    public String getRecipeKey() {
+        return recipeKey;
+    }
+
+    public List<String> getRecipeShape() {
+        return recipeShape;
+    }
+
+    public Set<String> getIngredientKeys() {
+        return ingredientKeys;
+    }
+
+    public boolean isByReference() {
+        return byReference;
     }
 
     public RecipeResultReference getResult() {
