@@ -69,7 +69,7 @@ public class RecipesManager {
 
     public void replaceRecipeNamed(String name, Recipe replacement) {
         this.recipes.removeIf(r -> r.getRecipeKey().equalsIgnoreCase(name));
-        this.recipes.add(replacement);
+        addRecipe(replacement);
     }
 
     private Recipe buildRecipe(@NotNull String key, @NotNull ConfigurationSection recipesSection) {
