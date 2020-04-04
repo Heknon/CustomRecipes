@@ -99,7 +99,7 @@ public class Recipe {
     }
 
     private String getReferencedRecipeKey(String recipeKey, String ingredientKey) {
-        ConfigurationSection recipesSection = customRecipes.getFileManager().getConfig(new File(customRecipes.getDataFolder(), "recipes.yml")).getFileConfiguration().getConfigurationSection("recipes");
+        ConfigurationSection recipesSection = customRecipes.getFileManager().getConfig("recipes.yml").get().getConfigurationSection("recipes");
         return recipesSection.getString(recipeKey + ".ingredients." + ingredientKey + ".ref");
     }
 

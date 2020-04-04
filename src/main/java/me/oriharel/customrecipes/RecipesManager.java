@@ -6,6 +6,7 @@ import me.oriharel.customrecipes.recipe.Recipe;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,17 +20,13 @@ public class RecipesManager {
 
     public RecipesManager(CustomRecipes customRecipes) {
         this.customRecipes = customRecipes;
-        FileManager.Config config = customRecipes.getFileManager().getConfig(new File(customRecipes.getDataFolder(), "recipes.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileManager.Config config = customRecipes.getFileManager().getConfig("recipes.yml");
+        YamlConfiguration configLoad = config.get();
 
         this.recipes = new ArrayList<Recipe>();
         if (!configLoad.isConfigurationSection("recipes")) {
             configLoad.createSection("recipes");
-            try {
-                configLoad.save(config.getFile());
-            } catch (IOException e) {
-                Bukkit.getServer().getLogger().log(Level.WARNING, "CustomRecipes | Error: Unable to create configuration section `recipes`.");
-            }
+            config.save();
             return;
         }
 

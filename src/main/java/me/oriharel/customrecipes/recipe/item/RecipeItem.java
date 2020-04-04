@@ -31,7 +31,7 @@ class RecipeItem extends ItemStack implements IRecipeItem {
         super();
         this.key = key;
         if (this instanceof RecipeResultReference)
-            this.section = customRecipes.getFileManager().getConfig(new File(customRecipes.getDataFolder(), "recipes.yml")).getFileConfiguration().getConfigurationSection("recipes." + key + ".item");
+            this.section = customRecipes.getFileManager().getConfig("recipes.yml").get().getConfigurationSection("recipes." + key + ".item");
         else this.section = null;
         handleNullSection();
         buildItemStack();
@@ -42,7 +42,7 @@ class RecipeItem extends ItemStack implements IRecipeItem {
         super();
         this.key = key;
         if (this instanceof RecipeIngredient)
-            this.section = customRecipes.getFileManager().getConfig(new File(customRecipes.getDataFolder(), "recipes.yml")).getFileConfiguration().getConfigurationSection("recipes." + key + ".ingredients." + ingredientKey);
+            this.section = customRecipes.getFileManager().getConfig("recipes.yml").get().getConfigurationSection("recipes." + key + ".ingredients." + ingredientKey);
         else this.section = null;
         handleNullSection();
         this.nbtTagCompound = new NBTTagCompound();
