@@ -10,10 +10,6 @@
   <component name="ChangeListManager">
     <list default="true" id="159bf02c-9c28-443e-92fb-13fcfa3d7d7e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/oriharel/customrecipes/RecipesManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/oriharel/customrecipes/RecipesManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/oriharel/customrecipes/recipe/Recipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/oriharel/customrecipes/recipe/Recipe.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/RecipesManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/RecipesManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/recipe/Recipe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/recipe/Recipe.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

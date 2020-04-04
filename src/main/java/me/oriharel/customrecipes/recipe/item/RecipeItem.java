@@ -22,7 +22,7 @@ class RecipeItem extends ItemStack implements IRecipeItem, Serializable {
     private transient final ConfigurationSection section;
     private me.oriharel.customrecipes.serialize.NBTTagCompound nbtTagCompound;
     private String displayName;
-    private int amount = -1;
+    private int recipeItemAmount = -1;
     private Material material;
     private List<String> lore;
     private Map<Enchantment, Integer> _enchantments;
@@ -83,8 +83,8 @@ class RecipeItem extends ItemStack implements IRecipeItem, Serializable {
 
     @Override
     public int getAmount() {
-        if (RecipeItem.this.amount == -1) RecipeItem.this.amount = this.section.getInt("amount", 1);
-        return RecipeItem.this.amount;
+        if (RecipeItem.this.recipeItemAmount == -1) RecipeItem.this.recipeItemAmount = this.section.getInt("amount", 1);
+        return RecipeItem.this.recipeItemAmount;
     }
 
     @Override
@@ -116,7 +116,7 @@ class RecipeItem extends ItemStack implements IRecipeItem, Serializable {
         if (_getEnchantments() != null)
             addEnchantments(_enchantments);
         setType(getMaterial());
-        setAmount(RecipeItem.this.amount);
+        setAmount(RecipeItem.this.recipeItemAmount);
         setItemMeta(meta);
     }
 
