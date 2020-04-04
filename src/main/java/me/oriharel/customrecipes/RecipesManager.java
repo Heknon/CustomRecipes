@@ -5,21 +5,21 @@ import me.oriharel.customrecipes.config.FileManager;
 import me.oriharel.customrecipes.recipe.Recipe;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 public class RecipesManager {
     private final CustomRecipes customRecipes;
     private List<Recipe> recipes;
+    private List<Runnable> recipesLoadedCallbacks;
 
     public RecipesManager(CustomRecipes customRecipes) {
         this.customRecipes = customRecipes;
+        this.recipesLoadedCallbacks = new ArrayList<>();
         FileManager.Config config = customRecipes.getFileManager().getConfig("recipes.yml");
         YamlConfiguration configLoad = config.get();
 
@@ -31,19 +31,24 @@ public class RecipesManager {
         }
 
         ConfigurationSection recipesSection = configLoad.getConfigurationSection("recipes");
-        for (String key : recipesSection.getKeys(false)) {
-            Bukkit.getServer().getLogger().log(Level.INFO, "Starting build recipe process for \"" + key + "\" recipe.");
-            final Recipe[] recipe = new Recipe[1];
-            Bukkit.getScheduler().runTaskAsynchronously(customRecipes, () -> {
-                recipe[0] = buildRecipe(key, recipesSection);
+        Set<String> recipeKeys = recipesSection.getKeys(false);
+        Bukkit.getScheduler().runTaskAsynchronously(customRecipes, () -> {
+            for (String key : recipeKeys) {
+                Bukkit.getServer().getLogger().log(Level.INFO, "Starting build recipe process for \"" + key + "\" recipe.");
+                Recipe recipe = buildRecipe(key, recipesSection);
                 Bukkit.getScheduler().runTask(customRecipes, () -> {
-                    boolean success = addRecipe(recipe[0]);
+                    boolean success = addRecipe(recipe);
                     if (success)
                         Bukkit.getServer().getLogger().log(Level.INFO, "The recipe \"" + key + "\" was successfully registered!");
                     else Bukkit.getServer().getLogger().log(Level.INFO, "Failed to register recipe \"" + key + "\"");
                 });
-            });
-        }
+            }
+            this.recipesLoadedCallbacks.forEach(Runnable::run);
+        });
+    }
+
+    public void registerRecipesDoneCallback(Runnable callback) {
+        this.recipesLoadedCallbacks.add(callback);
     }
 
     /**

@@ -12,15 +12,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.yaml.snakeyaml.error.YAMLException;
 
-import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-class RecipeItem extends ItemStack implements IRecipeItem {
+class RecipeItem extends ItemStack implements IRecipeItem, Serializable {
     private final String key;
-    private final ConfigurationSection section;
-    private NBTTagCompound nbtTagCompound;
+    private transient final ConfigurationSection section;
+    private me.oriharel.customrecipes.serialize.NBTTagCompound nbtTagCompound;
     private String displayName;
     private int amount = -1;
     private Material material;
@@ -45,14 +45,14 @@ class RecipeItem extends ItemStack implements IRecipeItem {
             this.section = customRecipes.getFileManager().getConfig("recipes.yml").get().getConfigurationSection("recipes." + key + ".ingredients." + ingredientKey);
         else this.section = null;
         handleNullSection();
-        this.nbtTagCompound = new NBTTagCompound();
+        this.nbtTagCompound = new me.oriharel.customrecipes.serialize.NBTTagCompound();
         buildItemStack();
     }
 
     @Override
     public NBTTagCompound getNBTTagCompound() {
         if (nbtTagCompound == null && this.section.isConfigurationSection("nbt")) {
-            nbtTagCompound = new NBTTagCompound();
+            nbtTagCompound = new me.oriharel.customrecipes.serialize.NBTTagCompound();
             this.section.getConfigurationSection("nbt").getValues(false).entrySet().forEach(e -> nbtTagCompound.setString(e.getKey(), (String) e.getValue()));
         }
         return nbtTagCompound;
@@ -69,7 +69,8 @@ class RecipeItem extends ItemStack implements IRecipeItem {
         if (material == null) {
             this.material = Material.getMaterial(this.section.getString("material", "_"));
             if (this.material == null)
-                throw new YAMLException("Invalid material name in section: \"" + this.section.getCurrentPath() + "\". View https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html for a list of valid materials.");
+                throw new YAMLException("Invalid material name in section: \"" + this.section.getCurrentPath() + "\". View https://hub.spigotmc" +
+                        ".org/javadocs/spigot/org/bukkit/Material.html for a list of valid materials.");
         }
         return material;
     }

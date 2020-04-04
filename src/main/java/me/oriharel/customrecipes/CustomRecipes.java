@@ -28,8 +28,8 @@ public final class CustomRecipes extends JavaPlugin {
         console.sendMessage("Starting up CustomRecipes");
 
         fileManager = new FileManager(this);
-        fileManager.getConfig("config.yml").copyDefaults(true).save();
-        fileManager.getConfig("recipes.yml").copyDefaults(true).save();
+        fileManager.getConfig("config.yml").copyDefaults(false).save();
+        fileManager.getConfig("recipes.yml").copyDefaults(false).save();
         recipesManager = new RecipesManager(this);
 
         CustomRecipesAPI.setImplementation(this);

@@ -12,17 +12,17 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.yaml.snakeyaml.error.YAMLException;
 
-import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Recipe {
+public class Recipe implements Serializable {
 
     private RecipeResultReference result;
     private List<IIngredient> ingredients;
-    private CustomRecipes customRecipes;
-    private org.bukkit.inventory.Recipe recipe;
+    private transient CustomRecipes customRecipes;
+    private transient org.bukkit.inventory.Recipe recipe;
     private String recipeKey;
     private List<String> recipeShape;
     private Set<String> ingredientKeys;
@@ -37,7 +37,8 @@ public class Recipe {
         this.ingredientKeys = ingredientKeys;
         this.byReference = byReference;
         this.result = new RecipeResultReference(recipeKey, customRecipes);
-        this.ingredients = ingredientKeys.stream().map(ingredientKey -> byReference ? new ReferencedResultIngredient(getReferencedRecipeKey(recipeKey, ingredientKey), ingredientKey, customRecipes) :
+        this.ingredients = ingredientKeys.stream().map(ingredientKey -> byReference ? new ReferencedResultIngredient(getReferencedRecipeKey(recipeKey, ingredientKey),
+                ingredientKey, customRecipes) :
                 new Ingredient(recipeKey, ingredientKey, customRecipes)).collect(Collectors.toList()
         );
         NamespacedKey key = new NamespacedKey(customRecipes, recipeKey);
