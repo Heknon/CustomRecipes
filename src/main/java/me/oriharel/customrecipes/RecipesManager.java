@@ -64,12 +64,19 @@ public class RecipesManager {
     }
 
     public boolean removeRecipeNamed(String name) {
-        return this.recipes.removeIf(r -> r.getRecipeKey().equalsIgnoreCase(name));
+        Recipe recipe = this.recipes.stream().filter(r -> r.getRecipeKey().equalsIgnoreCase(name)).findAny().orElse(null);
+        if (recipe == null) return false;
+        this.recipes.remove(recipe);
+        return Bukkit.removeRecipe(recipe.getNamespacedKey());
     }
 
-    public void replaceRecipeNamed(String name, Recipe replacement) {
-        this.recipes.removeIf(r -> r.getRecipeKey().equalsIgnoreCase(name));
-        addRecipe(replacement);
+    public boolean replaceRecipeNamed(String name, Recipe replacement) {
+        Recipe recipe = this.recipes.stream().filter(r -> r.getRecipeKey().equalsIgnoreCase(name)).findAny().orElse(null);
+        if (recipe == null) return false;
+        this.recipes.remove(recipe);
+        Bukkit.removeRecipe(recipe.getNamespacedKey());
+        this.recipes.add(replacement);
+        return Bukkit.addRecipe(replacement.getRecipe());
     }
 
     private Recipe buildRecipe(@NotNull String key, @NotNull ConfigurationSection recipesSection) {

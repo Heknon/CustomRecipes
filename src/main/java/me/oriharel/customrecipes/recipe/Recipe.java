@@ -21,6 +21,7 @@ public class Recipe implements Serializable {
 
     private RecipeResultReference result;
     private List<IIngredient> ingredients;
+    private transient NamespacedKey namespacedKey;
     private transient CustomRecipes customRecipes;
     private transient org.bukkit.inventory.Recipe recipe;
     private String recipeKey;
@@ -42,6 +43,7 @@ public class Recipe implements Serializable {
                 new Ingredient(recipeKey, ingredientKey, customRecipes)).collect(Collectors.toList()
         );
         NamespacedKey key = new NamespacedKey(customRecipes, recipeKey);
+        this.namespacedKey = key;
 
         if (shapeless) {
             if (ingredients.size() != 1)
@@ -106,5 +108,9 @@ public class Recipe implements Serializable {
 
     public boolean isShapeless() {
         return shapeless;
+    }
+
+    public NamespacedKey getNamespacedKey() {
+        return namespacedKey;
     }
 }
