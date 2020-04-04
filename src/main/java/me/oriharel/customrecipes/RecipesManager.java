@@ -63,6 +63,15 @@ public class RecipesManager {
         return success;
     }
 
+    public boolean removeRecipeNamed(String name) {
+        return this.recipes.removeIf(r -> r.getRecipeKey().equalsIgnoreCase(name));
+    }
+
+    public void replaceRecipeNamed(String name, Recipe replacement) {
+        this.recipes.removeIf(r -> r.getRecipeKey().equalsIgnoreCase(name));
+        this.recipes.add(replacement);
+    }
+
     private Recipe buildRecipe(@NotNull String key, @NotNull ConfigurationSection recipesSection) {
         ConfigurationSection recipeSection = recipesSection.getConfigurationSection(key);
         return new Recipe(

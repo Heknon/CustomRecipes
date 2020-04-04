@@ -50,7 +50,7 @@ class RecipeItem extends ItemStack implements IRecipeItem, Serializable {
     }
 
     @Override
-    public NBTTagCompound getNBTTagCompound() {
+    public me.oriharel.customrecipes.serialize.NBTTagCompound getNBTTagCompound() {
         if (nbtTagCompound == null && this.section.isConfigurationSection("nbt")) {
             nbtTagCompound = new me.oriharel.customrecipes.serialize.NBTTagCompound();
             this.section.getConfigurationSection("nbt").getValues(false).entrySet().forEach(e -> nbtTagCompound.setString(e.getKey(), (String) e.getValue()));
