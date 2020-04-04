@@ -6,6 +6,7 @@ import me.oriharel.customrecipes.recipe.Recipe;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +77,8 @@ public class RecipesManager {
         this.recipes.remove(recipe);
         Bukkit.removeRecipe(recipe.getNamespacedKey());
         this.recipes.add(replacement);
+        System.out.println("NBT KEYS WHEN RECONSTRUCTING RECIPE: " + CraftItemStack.asNMSCopy(replacement.getRecipe().getResult()).getTag().getKeys());
+        System.out.println("NBT KEYS WHEN RECONSTRUCTING RECIPE 2: " + replacement.getResult().getNBTTagCompound().getKeys());
         return Bukkit.addRecipe(replacement.getRecipe());
     }
 

@@ -42,17 +42,19 @@ public class Recipe implements Serializable {
                 ingredientKey, customRecipes) :
                 new Ingredient(recipeKey, ingredientKey, customRecipes)).collect(Collectors.toList()
         );
-        NamespacedKey key = new NamespacedKey(customRecipes, recipeKey);
-        this.namespacedKey = key;
+        this.namespacedKey = new NamespacedKey(customRecipes, recipeKey);
+        this.recipe = constructRecipe();
+    }
 
+    public org.bukkit.inventory.Recipe constructRecipe() {
         if (shapeless) {
             if (ingredients.size() != 1)
                 throw new YAMLException("Invalid configuration! Shapeless recipe \"" + recipeKey + "\" must have exactly 1 ingredient!");
-            ShapelessRecipe recipe = new ShapelessRecipe(key, this.result.getItemStackWithNBT());
+            ShapelessRecipe recipe = new ShapelessRecipe(namespacedKey, this.result.getItemStackWithNBT());
             recipe.addIngredient(new RecipeChoice.ExactChoice(ingredients.get(0).getIngredient().getItemStackWithNBT()));
-            this.recipe = recipe;
+            return recipe;
         } else {
-            ShapedRecipe recipe = new ShapedRecipe(key, this.result.getItemStackWithNBT());
+            ShapedRecipe recipe = new ShapedRecipe(namespacedKey, this.result.getItemStackWithNBT());
             switch (recipeShape.size()) {
                 case 1:
                     recipe.shape(recipeShape.get(0));
@@ -69,7 +71,7 @@ public class Recipe implements Serializable {
             for (IIngredient ingredient : this.ingredients) {
                 recipe.setIngredient(ingredient.getIngredientKey().charAt(0), new RecipeChoice.ExactChoice(ingredient.getIngredient().getItemStackWithNBT()));
             }
-            this.recipe = recipe;
+            return recipe;
         }
     }
 
@@ -112,5 +114,9 @@ public class Recipe implements Serializable {
 
     public NamespacedKey getNamespacedKey() {
         return namespacedKey;
+    }
+
+    public void setRecipe(org.bukkit.inventory.Recipe recipe) {
+        this.recipe = recipe;
     }
 }

@@ -14,9 +14,6 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/me/oriharel/customrecipes/recipe/Recipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/oriharel/customrecipes/recipe/Recipe.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/RecipesManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/RecipesManager.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/recipe/Recipe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/recipe/Recipe.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/recipe/item/RecipeIngredient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/recipe/item/RecipeIngredient.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/recipe/item/RecipeItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/recipe/item/RecipeItem.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/recipe/item/RecipeResultReference.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/recipe/item/RecipeResultReference.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
