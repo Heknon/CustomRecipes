@@ -17,6 +17,7 @@ recipes:
         "&7Compact Cobblestone Level 1",
         "&8This item is equivalent to x9 cobblestone"
       ]
+      nbt: "eyJrZXkiOiJ2YWx1ZSIsImRpc3BsYXkiOnsiTG9yZSI6W3siZGF0YSI6IntcInRleHRcIjpcIsKnN0NvbXBhY3QgQ29iYmxlc3RvbmUKICAgICAgICBMZXZlbCAxXCJ9In0seyJkYXRhIjoie1widGV4dFwiOlwiwqc4VGhpcyBpdGVtIGlzIGVxdWl2YWxlbnQgdG8geDkgY29iYmxlc3RvbmVcIn0ifV0sIk5hbWUiOnsiZGF0YSI6IntcInRleHRcIjpcIsKnN0NPTVBBQ1QKICAgICAgICBDT0JCTEVTVE9ORVwifSJ9fX0="
 
   revert_compact_cobblestone:
     by_reference: true

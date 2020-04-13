@@ -6,8 +6,8 @@ import me.oriharel.customrecipes.recipe.Recipe;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -64,6 +64,11 @@ public class RecipesManager {
         return success;
     }
 
+    @Nullable
+    public Recipe getRecipeByName(String recipeName) {
+        return this.recipes.stream().filter(recipe -> recipe.getRecipeKey().equalsIgnoreCase(recipeName)).findAny().orElse(null);
+    }
+
     public boolean removeRecipeNamed(String name) {
         Recipe recipe = this.recipes.stream().filter(r -> r.getRecipeKey().equalsIgnoreCase(name)).findAny().orElse(null);
         if (recipe == null) return false;
@@ -77,8 +82,6 @@ public class RecipesManager {
         this.recipes.remove(recipe);
         Bukkit.removeRecipe(recipe.getNamespacedKey());
         this.recipes.add(replacement);
-        System.out.println("NBT KEYS WHEN RECONSTRUCTING RECIPE: " + CraftItemStack.asNMSCopy(replacement.getRecipe().getResult()).getTag().getKeys());
-        System.out.println("NBT KEYS WHEN RECONSTRUCTING RECIPE 2: " + replacement.getResult().getNBTTagCompound().getKeys());
         return Bukkit.addRecipe(replacement.getRecipe());
     }
 

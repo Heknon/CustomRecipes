@@ -1,31 +1,35 @@
 package me.oriharel.customrecipes.recipe.item;
 
+import com.google.gson.Gson;
 import me.oriharel.customrecipes.CustomRecipes;
-import net.minecraft.server.v1_15_R1.NBTTagCompound;
+import net.minecraft.server.v1_15_R1.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.craftbukkit.libs.org.apache.commons.codec.binary.Base64;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.yaml.snakeyaml.error.YAMLException;
 
-import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-class RecipeItem extends ItemStack implements IRecipeItem, Serializable {
+class RecipeItem implements IRecipeItem {
     private final String key;
     private transient final ConfigurationSection section;
-    private me.oriharel.customrecipes.serialize.NBTTagCompound nbtTagCompound;
+    private ItemStack itemStack;
+    private transient NBTTagCompound nbtTagCompound;
     private String displayName;
     private int recipeItemAmount = -1;
     private Material material;
     private List<String> lore;
     private Map<Enchantment, Integer> _enchantments;
+    private ItemStack itemStackWithNBT = null;
 
     public RecipeItem(String key, CustomRecipes customRecipes) {
         super();
@@ -45,15 +49,26 @@ class RecipeItem extends ItemStack implements IRecipeItem, Serializable {
             this.section = customRecipes.getFileManager().getConfig("recipes.yml").get().getConfigurationSection("recipes." + key + ".ingredients." + ingredientKey);
         else this.section = null;
         handleNullSection();
-        this.nbtTagCompound = new me.oriharel.customrecipes.serialize.NBTTagCompound();
+        this.nbtTagCompound = new NBTTagCompound();
         buildItemStack();
     }
 
     @Override
-    public me.oriharel.customrecipes.serialize.NBTTagCompound getNBTTagCompound() {
-        if (nbtTagCompound == null && this.section.isConfigurationSection("nbt")) {
-            nbtTagCompound = new me.oriharel.customrecipes.serialize.NBTTagCompound();
-            this.section.getConfigurationSection("nbt").getValues(false).entrySet().forEach(e -> nbtTagCompound.setString(e.getKey(), (String) e.getValue()));
+    public NBTTagCompound getNBTTagCompound() {
+        if (nbtTagCompound == null && this.section.isSet("nbt")) {
+            try {
+                Constructor<NBTTagCompound> nbtTagCompoundConstructor = NBTTagCompound.class.getDeclaredConstructor(Map.class);
+                nbtTagCompoundConstructor.setAccessible(true);
+                String nbt = this.section.getString("nbt");
+                if (nbt == null || nbt.equalsIgnoreCase("")) {
+                    nbtTagCompound = new NBTTagCompound();
+                    return nbtTagCompound;
+                }
+                this.nbtTagCompound = nbtFromMap(new Gson().fromJson(new String(Base64.decodeBase64(nbt)), Map.class));
+
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
         }
         return nbtTagCompound;
     }
@@ -83,8 +98,8 @@ class RecipeItem extends ItemStack implements IRecipeItem, Serializable {
 
     @Override
     public int getAmount() {
-        if (RecipeItem.this.recipeItemAmount == -1) RecipeItem.this.recipeItemAmount = this.section.getInt("amount", 1);
-        return RecipeItem.this.recipeItemAmount;
+        if (this.recipeItemAmount == -1) this.recipeItemAmount = this.section.getInt("amount", 1);
+        return this.recipeItemAmount;
     }
 
     @Override
@@ -108,30 +123,82 @@ class RecipeItem extends ItemStack implements IRecipeItem, Serializable {
     }
 
     private void buildItemStack() {
-        ItemMeta meta = getItemMeta();
-        if (meta == null) meta = new ItemStack(getMaterial()).getItemMeta();
+        itemStack = new ItemStack(getMaterial(), getAmount());
+        net.minecraft.server.v1_15_R1.ItemStack is = CraftItemStack.asNMSCopy(itemStack);
+        is.setTag(getNBTTagCompound());
+        itemStack = CraftItemStack.asBukkitCopy(is);
+        ItemMeta meta = itemStack.getItemMeta();
         if (getDisplayName() != null) meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
         if (getLore() != null)
             meta.setLore(lore.stream().map(lorePart -> ChatColor.translateAlternateColorCodes('&', lorePart)).collect(Collectors.toList()));
         if (_getEnchantments() != null)
-            addEnchantments(_enchantments);
-        setType(getMaterial());
-        setAmount(RecipeItem.this.recipeItemAmount);
-        setItemMeta(meta);
+            itemStack.addEnchantments(_enchantments);
+        itemStack.setItemMeta(meta);
     }
 
     @Override
     public ItemStack getItemStackWithNBT() {
-        net.minecraft.server.v1_15_R1.ItemStack is = CraftItemStack.asNMSCopy(this);
-        NBTTagCompound tagCompound = is.getTag();
-        if (getNBTTagCompound() != null) for (String key : nbtTagCompound.getKeys()) {
-            tagCompound.setString(key, nbtTagCompound.getString(key));
+        return itemStack;
+    }
+
+    private NBTTagCompound nbtFromMap(Map<String, Object> map) {
+        NBTTagCompound nbtTagCompound = new NBTTagCompound();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            nbtTagCompound.set(entry.getKey(), nbtFromMapHelper(entry.getValue()));
         }
-        is.setTag(tagCompound);
-        return CraftItemStack.asBukkitCopy(is);
+        return nbtTagCompound;
+    }
+
+    private NBTBase nbtFromMapHelper(Object value) {
+        if (value instanceof Map) {
+            return nbtFromMap((Map<String, Object>) value);
+        } else if (value instanceof List) {
+            NBTTagList nbtTagList = new NBTTagList();
+            List list = ((List) value);
+            for (Object o : list) {
+                nbtTagList.add(nbtFromMapHelper(o));
+            }
+            return nbtTagList;
+        } else if (value instanceof String) {
+            return NBTTagString.a(((String) value).replace("Â§", "§"));
+        } else if (value instanceof Integer) {
+            return NBTTagInt.a((Integer) value);
+        } else if (value instanceof Byte) {
+            return NBTTagByte.a((byte) value);
+        } else if (value instanceof byte[]) {
+            return new NBTTagByteArray((byte[]) value);
+        } else if (value instanceof Boolean) {
+            return NBTTagByte.a((Boolean) value);
+        } else if (value instanceof Double) {
+            return NBTTagDouble.a((Double) value);
+        } else if (value instanceof Float) {
+            return NBTTagFloat.a((Float) value);
+        } else if (value instanceof int[]) {
+            return new NBTTagIntArray((int[]) value);
+        } else if (value instanceof Long) {
+            return NBTTagLong.a((Long) value);
+        } else if (value instanceof Short) {
+            return NBTTagShort.a((Short) value);
+        }
+        return null;
     }
 
     public String getKey() {
         return key;
+    }
+
+    @Override
+    public String toString() {
+        return "RecipeItem{" +
+                "key='" + key + '\'' +
+                ", section=" + section +
+                ", nbtTagCompound=" + nbtTagCompound +
+                ", displayName='" + displayName + '\'' +
+                ", recipeItemAmount=" + recipeItemAmount +
+                ", material=" + material +
+                ", lore=" + lore +
+                ", _enchantments=" + _enchantments +
+                ", itemStackWithNBT=" + itemStackWithNBT +
+                '}';
     }
 }

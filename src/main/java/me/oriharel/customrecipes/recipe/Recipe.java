@@ -103,6 +103,10 @@ public class Recipe implements Serializable {
         return recipe;
     }
 
+    public void setRecipe(org.bukkit.inventory.Recipe recipe) {
+        this.recipe = recipe;
+    }
+
     private String getReferencedRecipeKey(String recipeKey, String ingredientKey) {
         ConfigurationSection recipesSection = customRecipes.getFileManager().getConfig("recipes.yml").get().getConfigurationSection("recipes");
         return recipesSection.getString(recipeKey + ".ingredients." + ingredientKey + ".ref");
@@ -115,8 +119,6 @@ public class Recipe implements Serializable {
     public NamespacedKey getNamespacedKey() {
         return namespacedKey;
     }
-
-    public void setRecipe(org.bukkit.inventory.Recipe recipe) {
-        this.recipe = recipe;
-    }
 }
+
+
