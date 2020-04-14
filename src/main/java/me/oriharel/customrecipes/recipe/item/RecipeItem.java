@@ -8,21 +8,20 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.craftbukkit.libs.org.apache.commons.codec.binary.Base64;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-class RecipeItem implements IRecipeItem {
+public class RecipeItem extends ItemStack implements IRecipeItem {
     private final String key;
     private transient final ConfigurationSection section;
-    private ItemStack itemStack;
     private transient NBTTagCompound nbtTagCompound;
     private String displayName;
     private int recipeItemAmount = -1;
@@ -123,22 +122,31 @@ class RecipeItem implements IRecipeItem {
     }
 
     private void buildItemStack() {
-        itemStack = new ItemStack(getMaterial(), getAmount());
-        net.minecraft.server.v1_15_R1.ItemStack is = CraftItemStack.asNMSCopy(itemStack);
-        is.setTag(getNBTTagCompound());
-        itemStack = CraftItemStack.asBukkitCopy(is);
-        ItemMeta meta = itemStack.getItemMeta();
-        if (getDisplayName() != null) meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
-        if (getLore() != null)
-            meta.setLore(lore.stream().map(lorePart -> ChatColor.translateAlternateColorCodes('&', lorePart)).collect(Collectors.toList()));
-        if (_getEnchantments() != null)
-            itemStack.addEnchantments(_enchantments);
-        itemStack.setItemMeta(meta);
-    }
-
-    @Override
-    public ItemStack getItemStackWithNBT() {
-        return itemStack;
+        try {
+            this.setType(getMaterial());
+            this.setAmount(getAmount());
+            this.setItemMeta(new ItemStack(getMaterial(), getAmount()).getItemMeta());
+            Field metaField = ItemStack.class.getDeclaredField("meta");
+            metaField.setAccessible(true);
+            ItemMeta meta = (ItemMeta) metaField.get(this);
+            Class craftMetaItem = Class.forName("org.bukkit.craftbukkit.v1_15_R1.inventory.CraftMetaItem");
+            Field unhandledTagsField = craftMetaItem.getDeclaredField("unhandledTags");
+            unhandledTagsField.setAccessible(true);
+            Field nbtMapField = NBTTagCompound.class.getDeclaredField("map");
+            nbtMapField.setAccessible(true);
+            NBTTagCompound tagCompoundToSet = getNBTTagCompound();
+            if (tagCompoundToSet != null) {
+                Map<String, NBTBase> tagCompoundMapToSet = (Map<String, NBTBase>) nbtMapField.get(tagCompoundToSet);
+                unhandledTagsField.set(meta, tagCompoundMapToSet);
+            }
+            if (getDisplayName() != null) meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
+            if (getLore() != null)
+                meta.setLore(lore.stream().map(lorePart -> ChatColor.translateAlternateColorCodes('&', lorePart)).collect(Collectors.toList()));
+            if (_getEnchantments() != null)
+                this.addEnchantments(_enchantments);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private NBTTagCompound nbtFromMap(Map<String, Object> map) {
@@ -185,20 +193,5 @@ class RecipeItem implements IRecipeItem {
 
     public String getKey() {
         return key;
-    }
-
-    @Override
-    public String toString() {
-        return "RecipeItem{" +
-                "key='" + key + '\'' +
-                ", section=" + section +
-                ", nbtTagCompound=" + nbtTagCompound +
-                ", displayName='" + displayName + '\'' +
-                ", recipeItemAmount=" + recipeItemAmount +
-                ", material=" + material +
-                ", lore=" + lore +
-                ", _enchantments=" + _enchantments +
-                ", itemStackWithNBT=" + itemStackWithNBT +
-                '}';
     }
 }

@@ -50,11 +50,11 @@ public class Recipe implements Serializable {
         if (shapeless) {
             if (ingredients.size() != 1)
                 throw new YAMLException("Invalid configuration! Shapeless recipe \"" + recipeKey + "\" must have exactly 1 ingredient!");
-            ShapelessRecipe recipe = new ShapelessRecipe(namespacedKey, this.result.getItemStackWithNBT());
-            recipe.addIngredient(new RecipeChoice.ExactChoice(ingredients.get(0).getIngredient().getItemStackWithNBT()));
+            ShapelessRecipe recipe = new ShapelessRecipe(namespacedKey, this.result);
+            recipe.addIngredient(new RecipeChoice.ExactChoice(ingredients.get(0).getIngredient()));
             return recipe;
         } else {
-            ShapedRecipe recipe = new ShapedRecipe(namespacedKey, this.result.getItemStackWithNBT());
+            ShapedRecipe recipe = new ShapedRecipe(namespacedKey, this.result);
             switch (recipeShape.size()) {
                 case 1:
                     recipe.shape(recipeShape.get(0));
@@ -69,7 +69,7 @@ public class Recipe implements Serializable {
                     throw new YAMLException("Invalid recipe shape in recipe: \"" + recipeKey + "\". Must be of length 1, 2 or 3");
             }
             for (IIngredient ingredient : this.ingredients) {
-                recipe.setIngredient(ingredient.getIngredientKey().charAt(0), new RecipeChoice.ExactChoice(ingredient.getIngredient().getItemStackWithNBT()));
+                recipe.setIngredient(ingredient.getIngredientKey().charAt(0), new RecipeChoice.ExactChoice(ingredient.getIngredient()));
             }
             return recipe;
         }

@@ -3,9 +3,11 @@ package me.oriharel.customrecipes;
 import com.sun.istack.internal.NotNull;
 import me.oriharel.customrecipes.config.FileManager;
 import me.oriharel.customrecipes.recipe.Recipe;
+import me.oriharel.customrecipes.recipe.item.CraftRecipe;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ShapedRecipe;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -59,9 +61,12 @@ public class RecipesManager {
      * @return true if success false otherwise
      */
     public boolean addRecipe(Recipe recipe) {
-        boolean success = Bukkit.addRecipe(recipe.getRecipe());
-        if (success) this.recipes.add(recipe);
-        return success;
+        ShapedRecipe shapedRecipe = (ShapedRecipe) recipe.getRecipe();
+        CraftRecipe craftRecipe = new CraftRecipe(shapedRecipe);
+        craftRecipe.addToCraftingManager();
+//        boolean success = Bukkit.addRecipe(recipe.getRecipe());
+//        if (success) this.recipes.add(recipe);
+        return true;
     }
 
     @Nullable
