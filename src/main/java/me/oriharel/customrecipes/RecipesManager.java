@@ -61,12 +61,16 @@ public class RecipesManager {
      * @return true if success false otherwise
      */
     public boolean addRecipe(Recipe recipe) {
-        ShapedRecipe shapedRecipe = (ShapedRecipe) recipe.getRecipe();
-        CraftRecipe craftRecipe = new CraftRecipe(shapedRecipe);
-        craftRecipe.addToCraftingManager();
-//        boolean success = Bukkit.addRecipe(recipe.getRecipe());
-//        if (success) this.recipes.add(recipe);
-        return true;
+        try {
+            ShapedRecipe shapedRecipe = (ShapedRecipe) recipe.getRecipe();
+            CraftRecipe craftRecipe = new CraftRecipe(shapedRecipe);
+            craftRecipe.addToCraftingManager();
+            this.recipes.add(recipe);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Nullable
