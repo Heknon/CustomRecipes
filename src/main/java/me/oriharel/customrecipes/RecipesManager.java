@@ -4,9 +4,14 @@ import com.sun.istack.internal.NotNull;
 import me.oriharel.customrecipes.config.FileManager;
 import me.oriharel.customrecipes.recipe.Recipe;
 import me.oriharel.customrecipes.recipe.item.CraftRecipe;
+import net.minecraft.server.v1_15_R1.IRecipe;
+import net.minecraft.server.v1_15_R1.MinecraftKey;
+import net.minecraft.server.v1_15_R1.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import org.bukkit.craftbukkit.v1_15_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.ShapedRecipe;
 
 import javax.annotation.Nullable;
@@ -82,16 +87,16 @@ public class RecipesManager {
         Recipe recipe = this.recipes.stream().filter(r -> r.getRecipeKey().equalsIgnoreCase(name)).findAny().orElse(null);
         if (recipe == null) return false;
         this.recipes.remove(recipe);
-        return Bukkit.removeRecipe(recipe.getNamespacedKey());
+        return removeRecipeFromMinecraftRecipeManager(CraftNamespacedKey.toMinecraft(recipe.getNamespacedKey()));
     }
 
     public boolean replaceRecipeNamed(String name, Recipe replacement) {
         Recipe recipe = this.recipes.stream().filter(r -> r.getRecipeKey().equalsIgnoreCase(name)).findAny().orElse(null);
         if (recipe == null) return false;
         this.recipes.remove(recipe);
-        Bukkit.removeRecipe(recipe.getNamespacedKey());
+        removeRecipeFromMinecraftRecipeManager(CraftNamespacedKey.toMinecraft(recipe.getNamespacedKey()));
         this.recipes.add(replacement);
-        return Bukkit.addRecipe(replacement.getRecipe());
+        return addRecipe(replacement);
     }
 
     private Recipe buildRecipe(@NotNull String key, @NotNull ConfigurationSection recipesSection) {
@@ -104,6 +109,15 @@ public class RecipesManager {
                 recipeSection.getBoolean("shapeless_recipe"),
                 recipeSection.getBoolean("by_reference")
         );
+    }
+
+    private boolean removeRecipeFromMinecraftRecipeManager(MinecraftKey minecraftKey) {
+        for (Object2ObjectLinkedOpenHashMap<MinecraftKey, IRecipe<?>> recipes : MinecraftServer.getServer().getCraftingManager().recipes.values()) {
+            if (recipes.remove(minecraftKey) != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<Recipe> getRecipes() {
