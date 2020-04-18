@@ -119,6 +119,22 @@ public class Recipe implements Serializable {
     public NamespacedKey getNamespacedKey() {
         return namespacedKey;
     }
+
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "result=" + result +
+                ", ingredients=" + ingredients +
+                ", namespacedKey=" + namespacedKey +
+                ", customRecipes=" + customRecipes +
+                ", recipe=" + recipe +
+                ", recipeKey='" + recipeKey + '\'' +
+                ", recipeShape=" + recipeShape +
+                ", ingredientKeys=" + ingredientKeys +
+                ", byReference=" + byReference +
+                ", shapeless=" + shapeless +
+                '}';
+    }
 }
 
 

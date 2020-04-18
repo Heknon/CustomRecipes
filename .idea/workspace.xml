@@ -10,8 +10,8 @@
   <component name="ChangeListManager">
     <list default="true" id="159bf02c-9c28-443e-92fb-13fcfa3d7d7e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/oriharel/customrecipes/RecipesManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/oriharel/customrecipes/RecipesManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/CustomRecipes.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/CustomRecipes.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/oriharel/customrecipes/recipe/Recipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/oriharel/customrecipes/recipe/Recipe.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/recipe/Recipe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/oriharel/customrecipes/recipe/Recipe.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -162,11 +162,11 @@
       <screen x="0" y="0" width="2194" height="1194" />
     </state>
     <state x="552" y="252" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2194.1194/-3840.0.2194.1194@0.0.2194.1194" timestamp="1585643773711" />
-    <state x="903" y="306" width="460" height="648" key="#com.intellij.ide.util.MemberChooser" timestamp="1587036677456">
+    <state x="903" y="306" width="460" height="648" key="#com.intellij.ide.util.MemberChooser" timestamp="1587223610247">
       <screen x="0" y="0" width="2194" height="1194" />
     </state>
     <state x="-2937" y="306" key="#com.intellij.ide.util.MemberChooser/0.0.2194.1194/-3840.0.2194.1194@-3840.0.2194.1194" timestamp="1586949864369" />
-    <state x="903" y="306" width="460" height="648" key="#com.intellij.ide.util.MemberChooser/0.0.2194.1194/-3840.0.2194.1194@0.0.2194.1194" timestamp="1587036677456" />
+    <state x="903" y="306" width="460" height="648" key="#com.intellij.ide.util.MemberChooser/0.0.2194.1194/-3840.0.2194.1194@0.0.2194.1194" timestamp="1587223610247" />
     <state x="583" y="522" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1586721709688">
       <screen x="0" y="0" width="2194" height="1194" />
     </state>

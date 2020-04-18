@@ -121,7 +121,10 @@ public class RecipeItem extends ItemStack implements IRecipeItem {
         }
     }
 
-    private void buildItemStack() {
+    /**
+     * This is an internal method USE ONLY IF YOU KNOW WHAT YOU ARE DOING!
+     */
+    public void buildItemStack() {
         try {
             this.setType(getMaterial());
             this.setAmount(getAmount());
